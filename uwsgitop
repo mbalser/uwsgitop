@@ -50,9 +50,15 @@ if argc < 2:
     raise Exception("You have to specify the uWSGI stats socket")
 
 def inet_addr(arg):
-    sfamily = socket.AF_INET
     host, port = arg.rsplit(':', 1)
-    addr = (host, int(port))
+
+    if ':' in host:
+        sfamily = socket.AF_INET6
+        addr = (host, int(port), 0, 0)
+    else:
+        sfamily = socket.AF_INET
+        addr = (host, int(port))
+
     return sfamily, addr
 
 def unix_addr(arg):
